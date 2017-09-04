@@ -66,8 +66,7 @@ function TinyPNG(opt, obj) {
 
     this.stream = function() {
         var self = this,
-            opt = this.conf.options,
-            emitted = false;
+            opt = this.conf.options
 
         return (opt.parallel ? throughParallel : through).obj({maxConcurrency: opt.parallelMax}, function(file, enc, cb) {
             if(self.utils.glob(file, opt.ignore)) return cb();
@@ -130,12 +129,11 @@ function TinyPNG(opt, obj) {
             }
         })
         .on('error', function(err) {
-            emitted = true; // surely a method in the stream to handle this?
             self.stats.skipped++;
             self.utils.log(err.message);
         })
         .on('end', function() {
-            if(!emitted && opt.sigFile) self.hash.write(); // write sigs after complete
+            if(opt.sigFile) self.hash.write(); // write sigs after complete
             if(opt.summarize) {
                 var stats = self.stats,
                     info = util.format('Skipped: %s image%s, Compressed: %s image%s, Savings: %s (ratio: %s)',
